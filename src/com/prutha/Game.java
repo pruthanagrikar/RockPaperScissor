@@ -14,6 +14,7 @@ public class Game {
 
 
     Game(Player player1, Player player2) throws GameException{
+
         System.out.println("Game has been started! Best of LUCK!");
 
         this.numberOfRounds = 0;
@@ -44,27 +45,17 @@ public class Game {
 
    public void processMove(){
 
-       Map<Choices, Choices> choiceBeatsChoice = new HashMap<>();
+       int strongerThan = player1.getCurrentChoice().isStrongerThan(player2.getCurrentChoice());
 
-       choiceBeatsChoice.put(ROCK,SCISSOR);
-       choiceBeatsChoice.put(PAPER,ROCK);
-       choiceBeatsChoice.put(SCISSOR,PAPER);
-
-       if(player1.getCurrentChoice() == player2.getCurrentChoice()){
+       if(strongerThan ==0){
            System.out.println("Ahh, its a draw for round : " + getNumberOfRounds());
+       }else if(strongerThan > 0){
+           player1.incrementScore();
+           printResultForMove(player1);
+       }else {
+           player2.incrementScore();
+           printResultForMove(player2);
        }
-
-       choiceBeatsChoice.forEach((k, v) -> {
-           if(k == player1.getCurrentChoice() && v == player2.getCurrentChoice()){
-               player1.incrementScore();
-               printResultForMove(player1);
-               return;
-           }else if(k == player2.getCurrentChoice() && v == player1.getCurrentChoice() ) {
-               player2.incrementScore();
-               printResultForMove(player2);
-               return;
-           }
-       });
 
    }
 
@@ -72,11 +63,11 @@ public class Game {
         return ( player1.getScore() > player2.getScore() ) ? player1 : player2 ;
    }
 
-   public void printResultForMove(Player winner){
+   private void printResultForMove(Player winner){
        System.out.println("Winner for round: " + getNumberOfRounds() + " is: " + winner.getName());
    }
 
-   public boolean validChoice(){
+   private  boolean validChoice(){
         boolean isValid = false;
         if(player1.getCurrentChoice()!=null || player2.getCurrentChoice()!=null){
             isValid = true;
